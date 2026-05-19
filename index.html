@@ -233,11 +233,18 @@
 
     .nav-logo {
       display: flex;
-      flex-direction: column;
+      align-items: center;
       line-height: 1;
-      gap: 2px;
     }
 
+    .nav-logo-img {
+      height: 52px;
+      width: auto;
+      display: block;
+      border-radius: 7px;
+    }
+
+    /* Keep these for footer only */
     .nav-logo-name {
       font-family: var(--font-display);
       font-size: 1.35rem;
@@ -256,6 +263,14 @@
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--color-text-muted);
+    }
+
+    .footer-logo-img {
+      height: 90px;
+      width: auto;
+      display: block;
+      border-radius: 10px;
+      margin-bottom: 18px;
     }
 
     .nav-links {
@@ -1207,9 +1222,8 @@
        NAV
   ============================================================ -->
   <header id="nav">
-    <a href="#hero" class="nav-logo" aria-label="AquaNova Home">
-      <span class="nav-logo-name">Aqua<span>Nova</span></span>
-      <span class="nav-logo-tagline">Pressure Washing</span>
+    <a href="#hero" class="nav-logo" aria-label="AquaNova Pressure Washing — Home">
+      <img src="aquanovalogo.png" alt="AquaNova Pressure Washing" class="nav-logo-img" />
     </a>
 
     <nav class="nav-links" aria-label="Primary navigation">
@@ -1440,19 +1454,11 @@
         <!-- Slider 1: Driveway -->
         <div class="ba-wrapper reveal">
           <div class="ba-slider" data-slider>
-            <div class="ba-before" style="background: linear-gradient(135deg, #2a2018 0%, #3d3020 40%, #4a3a28 100%);">
+            <div class="ba-before" style="background-image:url('img/driveway.jpg');background-size:100% 200%;background-position:center 0%;background-repeat:no-repeat;">
               <span class="ba-label ba-label-before">BEFORE</span>
-              <div style="text-align:center; pointer-events:none;">
-                <svg width="48" height="48" fill="none" stroke="rgba(180,140,80,0.5)" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                <p style="color:rgba(180,140,80,0.5);font-size:0.75rem;margin-top:8px;font-weight:600;letter-spacing:0.1em;">STAINED CONCRETE</p>
-              </div>
             </div>
-            <div class="ba-after" style="background: linear-gradient(135deg, #c8c0b8 0%, #d8d0c8 40%, #e4ddd5 100%);">
+            <div class="ba-after" style="background-image:url('img/driveway.jpg');background-size:100% 200%;background-position:center 100%;background-repeat:no-repeat;">
               <span class="ba-label ba-label-after">AFTER</span>
-              <div style="text-align:center; pointer-events:none;">
-                <svg width="48" height="48" fill="none" stroke="rgba(11,30,61,0.5)" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                <p style="color:rgba(11,30,61,0.6);font-size:0.75rem;margin-top:8px;font-weight:600;letter-spacing:0.1em;">CLEAN CONCRETE</p>
-              </div>
             </div>
             <div class="ba-divider">
               <div class="ba-handle" aria-label="Drag to compare">
@@ -1466,19 +1472,11 @@
         <!-- Slider 2: Deck -->
         <div class="ba-wrapper reveal reveal-delay-1">
           <div class="ba-slider" data-slider>
-            <div class="ba-before" style="background: linear-gradient(135deg, #2c1f10 0%, #3d2a15 40%, #4a3218 100%);">
+            <div class="ba-before" style="background-image:url('img/deck.jpg');background-size:100% 200%;background-position:center 0%;background-repeat:no-repeat;">
               <span class="ba-label ba-label-before">BEFORE</span>
-              <div style="text-align:center; pointer-events:none;">
-                <svg width="48" height="48" fill="none" stroke="rgba(160,110,60,0.5)" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 20h20M4 20V8l8-6 8 6v12"/><rect x="9" y="14" width="6" height="6"/></svg>
-                <p style="color:rgba(160,110,60,0.5);font-size:0.75rem;margin-top:8px;font-weight:600;letter-spacing:0.1em;">WEATHERED DECK</p>
-              </div>
             </div>
-            <div class="ba-after" style="background: linear-gradient(135deg, #c8a46a 0%, #d4b07a 40%, #dfc090 100%);">
+            <div class="ba-after" style="background-image:url('img/deck.jpg');background-size:100% 200%;background-position:center 100%;background-repeat:no-repeat;">
               <span class="ba-label ba-label-after">AFTER</span>
-              <div style="text-align:center; pointer-events:none;">
-                <svg width="48" height="48" fill="none" stroke="rgba(60,30,10,0.5)" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 20h20M4 20V8l8-6 8 6v12"/><rect x="9" y="14" width="6" height="6"/></svg>
-                <p style="color:rgba(60,30,10,0.6);font-size:0.75rem;margin-top:8px;font-weight:600;letter-spacing:0.1em;">RESTORED DECK</p>
-              </div>
             </div>
             <div class="ba-divider">
               <div class="ba-handle" aria-label="Drag to compare">
@@ -1492,19 +1490,11 @@
         <!-- Slider 3: House Siding -->
         <div class="ba-wrapper reveal reveal-delay-2">
           <div class="ba-slider" data-slider>
-            <div class="ba-before" style="background: linear-gradient(135deg, #1e2820 0%, #252e25 40%, #2c3630 100%);">
+            <div class="ba-before" style="background-image:url('img/siding.jpg');background-size:100% 200%;background-position:center 0%;background-repeat:no-repeat;">
               <span class="ba-label ba-label-before">BEFORE</span>
-              <div style="text-align:center; pointer-events:none;">
-                <svg width="48" height="48" fill="none" stroke="rgba(100,160,100,0.4)" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                <p style="color:rgba(100,160,100,0.5);font-size:0.75rem;margin-top:8px;font-weight:600;letter-spacing:0.1em;">MOLD &amp; MILDEW</p>
-              </div>
             </div>
-            <div class="ba-after" style="background: linear-gradient(135deg, #d8e4f0 0%, #e4eef8 40%, #edf4fc 100%);">
+            <div class="ba-after" style="background-image:url('img/siding.jpg');background-size:100% 200%;background-position:center 100%;background-repeat:no-repeat;">
               <span class="ba-label ba-label-after">AFTER</span>
-              <div style="text-align:center; pointer-events:none;">
-                <svg width="48" height="48" fill="none" stroke="rgba(11,30,61,0.4)" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                <p style="color:rgba(11,30,61,0.5);font-size:0.75rem;margin-top:8px;font-weight:600;letter-spacing:0.1em;">CLEAN SIDING</p>
-              </div>
             </div>
             <div class="ba-divider">
               <div class="ba-handle" aria-label="Drag to compare">
@@ -1517,7 +1507,7 @@
 
       </div>
 
-      <p class="gallery-note reveal">Upload your own photos by replacing the placeholder gradient backgrounds in the HTML source.</p>
+      <p class="gallery-note reveal">Drag the handle on any slider to compare before &amp; after — results from real Ozaukee County jobs.</p>
     </div>
   </section>
 
@@ -1640,8 +1630,7 @@
 
         <!-- Brand column -->
         <div class="footer-brand">
-          <span class="nav-logo-name">Aqua<span style="color:var(--color-aqua);">Nova</span></span>
-          <span class="nav-logo-tagline">Pressure Washing</span>
+          <img src="aquanovalogo.png" alt="AquaNova Pressure Washing" class="footer-logo-img" />
           <p>Premium pressure washing for Ozaukee County homeowners and businesses. We treat every property like our own.</p>
           <div class="social-links">
             <!-- Facebook -->
@@ -1691,7 +1680,7 @@
           <div class="contact-item">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             <!-- OWNER: Replace with your email address -->
-            <span><a href="mailto:hello@aquanovawi.com">hello@aquanovawi.com</a></span>
+            <span><a href="mailto:contact@aquanovapw.com">aquanovapw.com</a></span>
           </div>
           <div class="contact-item">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
