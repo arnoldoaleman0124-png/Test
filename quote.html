@@ -373,7 +373,6 @@
             <div class="svc-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
             <div class="svc-info">
               <span class="svc-label">House &amp; Siding Wash</span>
-              <span class="svc-rate">From $250</span>
             </div>
           </div>
 
@@ -381,7 +380,6 @@
             <div class="svc-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
             <div class="svc-info">
               <span class="svc-label">Driveway Cleaning</span>
-              <span class="svc-rate">$0.20 / sq ft</span>
             </div>
           </div>
 
@@ -389,7 +387,6 @@
             <div class="svc-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
             <div class="svc-info">
               <span class="svc-label">Deck Cleaning</span>
-              <span class="svc-rate">$0.20 / sq ft</span>
             </div>
           </div>
 
@@ -397,12 +394,11 @@
             <div class="svc-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
             <div class="svc-info">
               <span class="svc-label">Fence Cleaning</span>
-              <span class="svc-rate">$1.50 / linear ft</span>
             </div>
           </div>
 
         </div>
-        <p class="pricing-note">$200 minimum on all jobs &nbsp;·&nbsp; Houses over 5,000 sq ft or 4+ stories receive a custom quote</p>
+        <p class="pricing-note">Houses over 5,000 sq ft or 4+ stories receive a custom quote</p>
         <div class="step-actions">
           <button class="btn-primary" onclick="s1Next()">
             Continue
@@ -473,7 +469,6 @@
               <span class="unit-badge">sq ft</span>
             </div>
             <div class="field-error" id="err-driveway">Please enter the driveway area.</div>
-            <div class="field-hint">A standard 2-car driveway is roughly 400–600 sq ft.</div>
           </div>
         </div>
 
@@ -510,14 +505,6 @@
         <div class="field-group" style="margin-bottom:0">
           <label class="field-label" for="extra-notes">Additional Notes</label>
           <textarea id="extra-notes" class="field-textarea" placeholder="Heavy staining, HOA requirements, hard-to-reach areas, or anything else we should know…"></textarea>
-        </div>
-
-        <!-- Live Quote Panel -->
-        <div class="quote-panel" id="quote-panel" style="display:none;">
-          <div class="quote-panel-header" id="quote-panel-header">Your Instant Quote</div>
-          <div class="quote-panel-body" id="quote-panel-body">
-            <div class="quote-empty">Enter your measurements above to see your price.</div>
-          </div>
         </div>
 
         <div class="step-actions">
@@ -589,15 +576,15 @@
       <div class="step-header-bar">Your Quote Summary</div>
       <div class="step-card">
         <div id="review-content"></div>
-        <p class="review-disclaimer">This is an automated estimate. Final pricing is confirmed after an on-site assessment and may vary based on condition, access, and staining.</p>
+        <p class="review-disclaimer">Everything look right? Click below to generate your instant quote.</p>
         <div class="step-actions" style="margin-top:20px;">
           <button class="btn-secondary" onclick="goStep(3)">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
             Back
           </button>
           <button class="btn-primary" id="submit-btn" onclick="submitQuote()">
-            Send My Quote
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Get My Instant Quote
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
         </div>
       </div>
@@ -609,8 +596,8 @@
         <div class="success-icon">
           <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
-        <h2>Quote Sent!</h2>
-        <p>Your request has been sent to our team. We'll review it and follow up within 24 hours to confirm your appointment.</p>
+        <h2 id="success-headline">Your Instant Quote</h2>
+        <div id="success-price-block" style="margin:20px auto 24px;"></div>
         <div class="success-detail" id="success-detail"></div>
         <a href="index.html" class="btn-primary" style="text-decoration:none;margin:0 auto;">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
@@ -698,7 +685,7 @@
 
       // Deck
       if (inputs.services.includes("deck")) {
-        total += inputs.deckSqft * 0.20;
+        total += inputs.deckSqft * 0.45;
       }
 
       // Fence
@@ -768,64 +755,7 @@
       recalculate();
     }
 
-    function recalculate() {
-      const panel = document.getElementById('quote-panel');
-      const header = document.getElementById('quote-panel-header');
-      const body   = document.getElementById('quote-panel-body');
-
-      const inputs = buildInputs();
-
-      // Check if any measurement has a value yet
-      const hasAnyMeas = (
-        (S.services.has('houseWash') && inputs.houseSqft > 0) ||
-        (S.services.has('driveway')  && inputs.drivewaySqft > 0) ||
-        (S.services.has('deck')      && inputs.deckSqft > 0) ||
-        (S.services.has('fence')     && inputs.fenceLinearFt > 0)
-      );
-
-      if (!hasAnyMeas) {
-        panel.style.display = 'none';
-        return;
-      }
-
-      panel.style.display = 'block';
-      const result = calculateQuote(inputs);
-
-      if (result.manualQuoteRequired) {
-        panel.className = 'quote-panel manual';
-        header.textContent = 'Custom Quote Required';
-        body.innerHTML = `<div class="quote-manual-msg"><strong>We'll provide a custom quote for this job.</strong><br>${result.manualQuoteReason} Submit the form and we'll reach out within 24 hours with a tailored price.</div>`;
-        return;
-      }
-
-      panel.className = 'quote-panel';
-      header.textContent = 'Your Instant Quote';
-
-      // Build line items
-      let lines = '';
-      if (S.services.has('houseWash') && inputs.houseSqft > 0) {
-        const base = houseWashBase(inputs.houseSqft);
-        lines += qLine(SVC_LABELS.houseWash, '$' + base);
-        if (inputs.stories === 2) lines += qLine('2-Story Surcharge', '+$75');
-        if (inputs.stories === 3) lines += qLine('3-Story Surcharge', '+$200');
-      }
-      if (S.services.has('driveway') && inputs.drivewaySqft > 0)
-        lines += qLine(`${SVC_LABELS.driveway} (${inputs.drivewaySqft.toLocaleString()} sq ft)`, '$' + Math.round(inputs.drivewaySqft * 0.20));
-      if (S.services.has('deck') && inputs.deckSqft > 0)
-        lines += qLine(`${SVC_LABELS.deck} (${inputs.deckSqft.toLocaleString()} sq ft)`, '$' + Math.round(inputs.deckSqft * 0.20));
-      if (S.services.has('fence') && inputs.fenceLinearFt > 0)
-        lines += qLine(`${SVC_LABELS.fence} (${inputs.fenceLinearFt.toLocaleString()} lin ft)`, '$' + Math.round(inputs.fenceLinearFt * 1.50));
-
-      // Note if minimum applied
-      const rawTotal = computeRawTotal(inputs);
-      const minApplied = rawTotal < 200 && rawTotal > 0;
-
-      body.innerHTML = lines + `
-        <div class="quote-line total">
-          <span class="quote-line-label">${minApplied ? 'Estimated Total (minimum applied)' : 'Estimated Total'}</span>
-          <span class="quote-line-price">$${result.total}</span>
-        </div>`;
-    }
+    function recalculate() { /* pricing hidden until quote is submitted */ }
 
     function qLine(label, price) {
       return `<div class="quote-line"><span class="quote-line-label">${label}</span><span class="quote-line-price">${price}</span></div>`;
@@ -835,7 +765,7 @@
     function computeRawTotal(inputs) {
       let t = 0;
       if (inputs.services.includes('driveway'))  t += inputs.drivewaySqft * 0.20;
-      if (inputs.services.includes('deck'))       t += inputs.deckSqft * 0.20;
+      if (inputs.services.includes('deck'))       t += inputs.deckSqft * 0.45;
       if (inputs.services.includes('fence'))      t += inputs.fenceLinearFt * 1.50;
       if (inputs.services.includes('houseWash') && inputs.houseSqft > 0 && inputs.houseSqft <= 5000 && inputs.stories < 4) {
         t += houseWashBase(inputs.houseSqft);
@@ -927,58 +857,34 @@
     ════════════════════════════════════════ */
     function buildReview() {
       const inputs = buildInputs();
-      const result = calculateQuote(inputs);
       const addr   = document.getElementById('prop-addr').value.trim();
       const sidMat = document.getElementById('siding-mat').value;
       const notes  = document.getElementById('extra-notes').value.trim();
 
-      let html = '';
-
-      if (result.manualQuoteRequired) {
-        html += `<div class="review-manual-banner">
-          <strong>Custom Quote Required</strong><br>${result.manualQuoteReason}
-          We'll reach out within 24 hours with a tailored price.
-        </div>`;
-      }
-
-      html += `<div class="review-block"><div class="review-block-title">Quote Breakdown</div><div class="review-rows">`;
-
-      if (S.services.has('houseWash') && inputs.houseSqft > 0) {
-        if (!result.manualQuoteRequired || result.manualQuoteReason.includes('sq ft')) {
-          const base = houseWashBase(inputs.houseSqft);
-          if (inputs.houseSqft <= 5000) {
-            html += rrow('House & Siding Wash', `${inputs.houseSqft.toLocaleString()} sq ft — $${base}`);
-            if (inputs.stories === 2) html += rrow('2-Story Surcharge', '+$75');
-            if (inputs.stories === 3) html += rrow('3-Story Surcharge', '+$200');
-          } else {
-            html += rrow('House & Siding Wash', 'Custom quote required');
-          }
-        } else {
-          html += rrow('House & Siding Wash', 'Custom quote required (4+ stories)');
+      const svcNames = {
+        houseWash: 'House & Siding Wash',
+        driveway:  'Driveway Cleaning',
+        deck:      'Deck Cleaning',
+        fence:     'Fence Cleaning',
+      };
+      const svcRows = [...S.services].map(k => {
+        if (k === 'houseWash' && inputs.houseSqft > 0) {
+          const storLabel = S.stories ? ` · ${S.stories}${S.stories >= 4 ? '+' : ''}-story` : '';
+          return rrow(svcNames[k], `${inputs.houseSqft.toLocaleString()} sq ft${storLabel}`);
         }
-      }
-      if (S.services.has('driveway') && inputs.drivewaySqft > 0)
-        html += rrow(`Driveway (${inputs.drivewaySqft.toLocaleString()} sq ft)`, '$' + Math.round(inputs.drivewaySqft * 0.20));
-      if (S.services.has('deck') && inputs.deckSqft > 0)
-        html += rrow(`Deck (${inputs.deckSqft.toLocaleString()} sq ft)`, '$' + Math.round(inputs.deckSqft * 0.20));
-      if (S.services.has('fence') && inputs.fenceLinearFt > 0)
-        html += rrow(`Fence (${inputs.fenceLinearFt.toLocaleString()} lin ft)`, '$' + Math.round(inputs.fenceLinearFt * 1.50));
+        if (k === 'driveway'  && inputs.drivewaySqft  > 0) return rrow(svcNames[k], `${inputs.drivewaySqft.toLocaleString()} sq ft`);
+        if (k === 'deck'      && inputs.deckSqft       > 0) return rrow(svcNames[k], `${inputs.deckSqft.toLocaleString()} sq ft`);
+        if (k === 'fence'     && inputs.fenceLinearFt  > 0) return rrow(svcNames[k], `${inputs.fenceLinearFt.toLocaleString()} linear ft`);
+        return '';
+      }).join('');
 
-      if (result.manualQuoteRequired) {
-        html += `<div class="review-row total-row"><span class="review-key">Estimated Total</span><span class="review-val" style="color:var(--gold)">Custom Quote</span></div>`;
-      } else {
-        const rawTotal = computeRawTotal(inputs);
-        const note = rawTotal < 200 ? ' (minimum applied)' : '';
-        html += `<div class="review-row total-row"><span class="review-key">Estimated Total</span><span class="review-val">$${result.total}${note}</span></div>`;
-      }
-
-      html += `</div></div>`;
+      let html = '';
+      html += `<div class="review-block"><div class="review-block-title">Services &amp; Measurements</div><div class="review-rows">${svcRows}</div></div>`;
 
       html += `<div class="review-block"><div class="review-block-title">Property</div><div class="review-rows">
         ${rrow('Address', addr)}
-        ${sidMat  ? rrow('Siding Material', sidMat) : ''}
-        ${S.stories && S.services.has('houseWash') ? rrow('Stories', S.stories + (S.stories >= 4 ? '+' : '') + ' stor' + (S.stories === 1 ? 'y' : 'ies')) : ''}
-        ${notes   ? rrow('Notes', notes) : ''}
+        ${sidMat ? rrow('Siding Material', sidMat) : ''}
+        ${notes  ? rrow('Notes', notes) : ''}
       </div></div>`;
 
       html += `<div class="review-block"><div class="review-block-title">Contact</div><div class="review-rows">
@@ -1031,7 +937,7 @@
       if (S.services.has('driveway') && inputs.drivewaySqft > 0)
         qLines.push(`  Driveway: ${inputs.drivewaySqft.toLocaleString()} sq ft × $0.20 = $${Math.round(inputs.drivewaySqft * 0.20)}`);
       if (S.services.has('deck') && inputs.deckSqft > 0)
-        qLines.push(`  Deck: ${inputs.deckSqft.toLocaleString()} sq ft × $0.20 = $${Math.round(inputs.deckSqft * 0.20)}`);
+        qLines.push(`  Deck: ${inputs.deckSqft.toLocaleString()} sq ft × $0.45 = $${Math.round(inputs.deckSqft * 0.45)}`);
       if (S.services.has('fence') && inputs.fenceLinearFt > 0)
         qLines.push(`  Fence: ${inputs.fenceLinearFt.toLocaleString()} lin ft × $1.50 = $${Math.round(inputs.fenceLinearFt * 1.50)}`);
 
@@ -1100,9 +1006,27 @@ Final pricing confirmed after on-site assessment.
       document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
       document.getElementById('step-success').classList.add('active');
       markAllDone();
-      document.getElementById('success-detail').innerHTML = result.manualQuoteRequired
-        ? `<strong>Custom quote requested.</strong><br>One of our team members will review your job details and send you a tailored price within 24 hours.`
-        : `<strong>Your estimated total is $${result.total}.</strong><br>We'll confirm this price and schedule your appointment within 24 hours.`;
+
+      const rawTotal = computeRawTotal(buildInputs());
+      const minNote  = (!result.manualQuoteRequired && rawTotal > 0 && rawTotal < 200)
+        ? `<div style="font-size:0.78rem;color:var(--muted);margin-top:6px;">$200 minimum applied</div>` : '';
+
+      if (result.manualQuoteRequired) {
+        document.getElementById('success-headline').textContent = 'Custom Quote Requested';
+        document.getElementById('success-price-block').innerHTML =
+          `<div style="font-size:2.8rem;font-weight:800;color:var(--gold);letter-spacing:-1px;">TBD</div>
+           <div style="font-size:0.85rem;color:var(--muted);margin-top:6px;">${result.manualQuoteReason}</div>`;
+        document.getElementById('success-detail').innerHTML =
+          `Our team will review your job details and send you a tailored price within 24 hours.`;
+      } else {
+        document.getElementById('success-headline').textContent = 'Your Instant Quote';
+        document.getElementById('success-price-block').innerHTML =
+          `<div style="font-size:3.2rem;font-weight:800;color:var(--aqua);letter-spacing:-1px;">$${result.total}</div>
+           <div style="font-size:0.8rem;color:var(--muted);margin-top:4px;">Estimated Total</div>${minNote}`;
+        document.getElementById('success-detail').innerHTML =
+          `We've received your request, ${firstName}. We'll confirm this price and reach out within 24 hours to schedule your appointment.`;
+      }
+
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
