@@ -402,7 +402,7 @@
           </div>
 
         </div>
-        <p class="pricing-note">$200 minimum on all jobs &nbsp;·&nbsp; Houses over 4,000 sq ft or 4+ stories receive a custom quote</p>
+        <p class="pricing-note">$200 minimum on all jobs &nbsp;·&nbsp; Houses over 5,000 sq ft or 4+ stories receive a custom quote</p>
         <div class="step-actions">
           <button class="btn-primary" onclick="s1Next()">
             Continue
@@ -648,6 +648,17 @@
     /* ══════════════════════════════════════════════════════
        PRICING FUNCTION (exact logic as specified)
     ══════════════════════════════════════════════════════ */
+    function houseWashBase(sqft) {
+      if (sqft <= 1500) return 200;
+      if (sqft <= 2000) return 265;
+      if (sqft <= 2500) return 340;
+      if (sqft <= 3000) return 415;
+      if (sqft <= 3500) return 490;
+      if (sqft <= 4000) return 565;
+      if (sqft <= 4500) return 640;
+      return 715;
+    }
+
     function calculateQuote(inputs) {
       let total = 0;
       let manualQuoteRequired = false;
@@ -657,16 +668,17 @@
       if (inputs.services.includes("houseWash")) {
         const sqft = inputs.houseSqft;
 
-        if (sqft > 4000) {
+        if (sqft > 5000) {
           manualQuoteRequired = true;
-          manualQuoteReason = "Houses over 4,000 sq ft require a custom quote.";
-        } else if (sqft < 2000) {
-          total += 250;
-        } else if (sqft >= 2000 && sqft <= 3000) {
-          total += 350;
-        } else if (sqft > 3000 && sqft <= 4000) {
-          total += 450;
-        }
+          manualQuoteReason = "Houses over 5,000 sq ft require a custom quote.";
+        } else if (sqft <= 1500) { total += 200; }
+        else if (sqft <= 2000)   { total += 265; }
+        else if (sqft <= 2500)   { total += 340; }
+        else if (sqft <= 3000)   { total += 415; }
+        else if (sqft <= 3500)   { total += 490; }
+        else if (sqft <= 4000)   { total += 565; }
+        else if (sqft <= 4500)   { total += 640; }
+        else if (sqft <= 5000)   { total += 715; }
 
         // Stories surcharge
         if (inputs.stories === 2) {
@@ -792,7 +804,7 @@
       // Build line items
       let lines = '';
       if (S.services.has('houseWash') && inputs.houseSqft > 0) {
-        const base = inputs.houseSqft < 2000 ? 250 : inputs.houseSqft <= 3000 ? 350 : 450;
+        const base = houseWashBase(inputs.houseSqft);
         lines += qLine(SVC_LABELS.houseWash, '$' + base);
         if (inputs.stories === 2) lines += qLine('2-Story Surcharge', '+$75');
         if (inputs.stories === 3) lines += qLine('3-Story Surcharge', '+$200');
@@ -825,8 +837,8 @@
       if (inputs.services.includes('driveway'))  t += inputs.drivewaySqft * 0.20;
       if (inputs.services.includes('deck'))       t += inputs.deckSqft * 0.20;
       if (inputs.services.includes('fence'))      t += inputs.fenceLinearFt * 1.50;
-      if (inputs.services.includes('houseWash') && inputs.houseSqft > 0 && inputs.houseSqft <= 4000 && inputs.stories < 4) {
-        t += inputs.houseSqft < 2000 ? 250 : inputs.houseSqft <= 3000 ? 350 : 450;
+      if (inputs.services.includes('houseWash') && inputs.houseSqft > 0 && inputs.houseSqft <= 5000 && inputs.stories < 4) {
+        t += houseWashBase(inputs.houseSqft);
         if (inputs.stories === 2) t += 75;
         if (inputs.stories === 3) t += 200;
       }
@@ -933,8 +945,8 @@
 
       if (S.services.has('houseWash') && inputs.houseSqft > 0) {
         if (!result.manualQuoteRequired || result.manualQuoteReason.includes('sq ft')) {
-          const base = inputs.houseSqft < 2000 ? 250 : inputs.houseSqft <= 3000 ? 350 : 450;
-          if (inputs.houseSqft <= 4000) {
+          const base = houseWashBase(inputs.houseSqft);
+          if (inputs.houseSqft <= 5000) {
             html += rrow('House & Siding Wash', `${inputs.houseSqft.toLocaleString()} sq ft — $${base}`);
             if (inputs.stories === 2) html += rrow('2-Story Surcharge', '+$75');
             if (inputs.stories === 3) html += rrow('3-Story Surcharge', '+$200');
@@ -1006,10 +1018,10 @@
       // Build quote lines
       const qLines = [];
       if (S.services.has('houseWash') && inputs.houseSqft > 0) {
-        if (inputs.houseSqft > 4000) {
-          qLines.push('  House & Siding Wash: CUSTOM QUOTE (over 4,000 sq ft)');
+        if (inputs.houseSqft > 5000) {
+          qLines.push('  House & Siding Wash: CUSTOM QUOTE (over 5,000 sq ft)');
         } else {
-          const base = inputs.houseSqft < 2000 ? 250 : inputs.houseSqft <= 3000 ? 350 : 450;
+          const base = houseWashBase(inputs.houseSqft);
           qLines.push(`  House & Siding Wash: ${inputs.houseSqft.toLocaleString()} sq ft — $${base}`);
           if (inputs.stories === 2) qLines.push('  2-Story Surcharge: +$75');
           if (inputs.stories === 3) qLines.push('  3-Story Surcharge: +$200');
