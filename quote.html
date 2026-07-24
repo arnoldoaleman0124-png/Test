@@ -397,6 +397,13 @@
             </div>
           </div>
 
+          <div class="service-toggle" data-svc="gutterCleaning" onclick="toggleSvc(this)">
+            <div class="svc-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="svc-info">
+              <span class="svc-label">Gutter Cleaning</span>
+            </div>
+          </div>
+
         </div>
         <p class="pricing-note">Houses over 5,000 sq ft or 4+ stories receive a custom quote</p>
         <div class="step-actions">
@@ -498,6 +505,21 @@
               <span class="unit-badge">linear ft</span>
             </div>
             <div class="field-error" id="err-fence">Please enter the fence length.</div>
+          </div>
+        </div>
+
+        <!-- Gutter Cleaning -->
+        <div class="cond-block" id="cond-gutterCleaning">
+          <hr class="cond-divider" />
+          <div class="cond-title">Gutter Cleaning</div>
+          <div class="field-group" style="margin-bottom:0">
+            <label class="field-label">Number of Stories <span class="req">*</span></label>
+            <div class="radio-chips" id="gutter-stories-chips">
+              <div class="radio-chip" data-gutter-stories="1" onclick="pickGutterStories(this)">1 Story</div>
+              <div class="radio-chip" data-gutter-stories="2" onclick="pickGutterStories(this)">2 Stories</div>
+              <div class="radio-chip" data-gutter-stories="3" onclick="pickGutterStories(this)">3+ Stories</div>
+            </div>
+            <div class="field-error" id="err-gutter-stories">Please select the number of stories.</div>
           </div>
         </div>
 
@@ -629,7 +651,8 @@
     /* ══ STATE ══ */
     const S = {
       services: new Set(),
-      stories: null,   // numeric: 1, 2, 3, or 4
+      stories: null,        // numeric: 1, 2, 3, or 4 (house wash)
+      gutterStories: null,  // numeric: 1, 2, or 3 (gutter cleaning)
     };
 
     /* ══════════════════════════════════════════════════════
@@ -693,6 +716,17 @@
         total += inputs.fenceLinearFt * 1.50;
       }
 
+      // Gutter Cleaning
+      if (inputs.services.includes("gutterCleaning")) {
+        const gs = inputs.gutterStories;
+        if (gs === 1)      total += 150;
+        else if (gs === 2) total += 250;
+        else if (gs >= 3) {
+          manualQuoteRequired = true;
+          manualQuoteReason = "3+ story gutter cleaning requires a custom quote.";
+        }
+      }
+
       // Minimum job price
       if (total < 200 && !manualQuoteRequired) {
         total = 200;
@@ -707,21 +741,23 @@
     /* ══ Build inputs object from form ══ */
     function buildInputs() {
       return {
-        services:     [...S.services],
-        houseSqft:    parseFloat(document.getElementById('meas-house')?.value)    || 0,
-        stories:      S.stories || 1,
-        drivewaySqft: parseFloat(document.getElementById('meas-driveway')?.value) || 0,
-        deckSqft:     parseFloat(document.getElementById('meas-deck')?.value)     || 0,
-        fenceLinearFt:parseFloat(document.getElementById('meas-fence')?.value)    || 0,
+        services:      [...S.services],
+        houseSqft:     parseFloat(document.getElementById('meas-house')?.value)    || 0,
+        stories:       S.stories || 1,
+        drivewaySqft:  parseFloat(document.getElementById('meas-driveway')?.value) || 0,
+        deckSqft:      parseFloat(document.getElementById('meas-deck')?.value)     || 0,
+        fenceLinearFt: parseFloat(document.getElementById('meas-fence')?.value)    || 0,
+        gutterStories: S.gutterStories || 0,
       };
     }
 
     /* ══ Service labels ══ */
     const SVC_LABELS = {
-      houseWash: 'House & Siding Wash',
-      driveway:  'Driveway Cleaning',
-      deck:      'Deck Cleaning',
-      fence:     'Fence Cleaning',
+      houseWash:      'House & Siding Wash',
+      driveway:       'Driveway Cleaning',
+      deck:           'Deck Cleaning',
+      fence:          'Fence Cleaning',
+      gutterCleaning: 'Gutter Cleaning',
     };
 
     /* ════════════════════════════════════════
@@ -736,7 +772,7 @@
     function s1Next() {
       if (!S.services.size) { document.getElementById('err-s1').style.display = 'block'; return; }
       // Show conditional measurement blocks
-      ['houseWash', 'driveway', 'deck', 'fence'].forEach(k => {
+      ['houseWash', 'driveway', 'deck', 'fence', 'gutterCleaning'].forEach(k => {
         const el = document.getElementById('cond-' + k);
         if (el) el.classList.toggle('show', S.services.has(k));
       });
@@ -755,6 +791,13 @@
       recalculate();
     }
 
+    function pickGutterStories(el) {
+      document.querySelectorAll('.radio-chip[data-gutter-stories]').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      S.gutterStories = parseInt(el.dataset.gutterStories, 10);
+      document.getElementById('err-gutter-stories').style.display = 'none';
+    }
+
     function recalculate() { /* pricing hidden until quote is submitted */ }
 
     function qLine(label, price) {
@@ -771,6 +814,9 @@
         t += houseWashBase(inputs.houseSqft);
         if (inputs.stories === 2) t += 75;
         if (inputs.stories === 3) t += 200;
+      }
+      if (inputs.services.includes('gutterCleaning') && inputs.gutterStories > 0 && inputs.gutterStories < 3) {
+        t += inputs.gutterStories === 1 ? 150 : 250;
       }
       return t;
     }
@@ -823,6 +869,14 @@
         if (!v.value || parseFloat(v.value) <= 0) { v.classList.add('err'); document.getElementById('err-fence').style.display = 'block'; valid = false; }
         else { v.classList.remove('err'); document.getElementById('err-fence').style.display = 'none'; }
       }
+      if (S.services.has('gutterCleaning')) {
+        if (!S.gutterStories) {
+          document.getElementById('err-gutter-stories').style.display = 'block';
+          valid = false;
+        } else {
+          document.getElementById('err-gutter-stories').style.display = 'none';
+        }
+      }
 
       if (!valid) { document.getElementById('err-s2').style.display = 'block'; return; }
       document.getElementById('err-s2').style.display = 'none';
@@ -862,10 +916,11 @@
       const notes  = document.getElementById('extra-notes').value.trim();
 
       const svcNames = {
-        houseWash: 'House & Siding Wash',
-        driveway:  'Driveway Cleaning',
-        deck:      'Deck Cleaning',
-        fence:     'Fence Cleaning',
+        houseWash:      'House & Siding Wash',
+        driveway:       'Driveway Cleaning',
+        deck:           'Deck Cleaning',
+        fence:          'Fence Cleaning',
+        gutterCleaning: 'Gutter Cleaning',
       };
       const svcRows = [...S.services].map(k => {
         if (k === 'houseWash' && inputs.houseSqft > 0) {
@@ -875,6 +930,10 @@
         if (k === 'driveway'  && inputs.drivewaySqft  > 0) return rrow(svcNames[k], `${inputs.drivewaySqft.toLocaleString()} sq ft`);
         if (k === 'deck'      && inputs.deckSqft       > 0) return rrow(svcNames[k], `${inputs.deckSqft.toLocaleString()} sq ft`);
         if (k === 'fence'     && inputs.fenceLinearFt  > 0) return rrow(svcNames[k], `${inputs.fenceLinearFt.toLocaleString()} linear ft`);
+        if (k === 'gutterCleaning' && inputs.gutterStories > 0) {
+          const gs = inputs.gutterStories >= 3 ? '3+-story' : `${inputs.gutterStories}-story`;
+          return rrow(svcNames[k], gs);
+        }
         return '';
       }).join('');
 
@@ -940,6 +999,14 @@
         qLines.push(`  Deck: ${inputs.deckSqft.toLocaleString()} sq ft × $0.45 = $${Math.round(inputs.deckSqft * 0.45)}`);
       if (S.services.has('fence') && inputs.fenceLinearFt > 0)
         qLines.push(`  Fence: ${inputs.fenceLinearFt.toLocaleString()} lin ft × $1.50 = $${Math.round(inputs.fenceLinearFt * 1.50)}`);
+      if (S.services.has('gutterCleaning') && inputs.gutterStories > 0) {
+        if (inputs.gutterStories >= 3) {
+          qLines.push('  Gutter Cleaning: CUSTOM QUOTE (3+ stories)');
+        } else {
+          const gPrice = inputs.gutterStories === 1 ? 150 : 250;
+          qLines.push(`  Gutter Cleaning: ${inputs.gutterStories}-story — $${gPrice}`);
+        }
+      }
 
       const totalLine = result.manualQuoteRequired
         ? `  TOTAL: CUSTOM QUOTE REQUIRED\n  Reason: ${result.manualQuoteReason}`
