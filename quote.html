@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get a Free Quote | AquaNova Pressure Washing</title>
+  <meta name="description" content="Get an instant price estimate from AquaNova Pressure Washing. Enter your measurements and get a quote in seconds." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+
+  <!--
+  ══════════════════════════════════════════════════════
+  EMAIL SETUP (one-time, ~5 minutes)
+  ══════════════════════════════════════════════════════
+  1. Go to https://www.emailjs.com and create a free account
+  2. Click "Email Services" → Add New Service → choose Gmail
+     • Sign in with contact@aquanovapw.com
+     • Note the Service ID (e.g. "service_abc123")
+  3. Click "Email Templates" → Create New Template
+     • Set "To Email" to: contact@aquanovapw.com
+     • Set Subject to:    {{subject}}
+     • Set Content to:    {{message}}
+     • Save and note the Template ID (e.g. "template_xyz456")
+  4. Account (top right) → API Keys → copy your Public Key
+  5. Paste all three into the constants below
+  ══════════════════════════════════════════════════════
+  -->
+
+  <style>
+    :root {
+      --navy:       #0B1E3D;
+      --navy-mid:   #122850;
+      --aqua:       #00C9E0;
+      --aqua-bright:#4DDFEF;
+      --gold:       #F4A40A;
+      --white:      #ffffff;
+      --off-white:  #e8f4f8;
+      --muted:      #8dacc8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      line-height: 1.7;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    a { text-decoration: none; color: var(--aqua); transition: color 0.3s; }
+    a:hover { color: var(--aqua-bright); }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy);
+      border-bottom: 1px solid rgba(0,201,224,0.12);
+      padding: 16px clamp(20px,5vw,60px);
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+    }
+    .nav-logo img { height: 48px; width: auto; border-radius: 6px; }
+    .nav-back {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--muted); transition: color 0.3s;
+    }
+    .nav-back:hover { color: var(--aqua-bright); }
+    .nav-back svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ── HERO ── */
+    .page-hero {
+      background: linear-gradient(135deg, #06111f 0%, var(--navy-mid) 100%);
+      border-bottom: 1px solid rgba(0,201,224,0.1);
+      padding: 52px clamp(20px,5vw,60px);
+      text-align: center;
+    }
+    .page-hero .label {
+      display: inline-block; font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--aqua); margin-bottom: 14px;
+    }
+    .page-hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700; color: var(--white); margin-bottom: 10px;
+    }
+    .page-hero p { font-size: 0.9rem; color: var(--muted); }
+
+    /* ── PROGRESS ── */
+    .progress-wrapper {
+      background: var(--navy-mid);
+      border-bottom: 1px solid rgba(0,201,224,0.1);
+      padding: 22px clamp(20px,5vw,60px);
+    }
+    .progress-steps { display: flex; align-items: center; max-width: 580px; margin: 0 auto; }
+    .progress-step { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 0 0 auto; }
+    .progress-step-circle {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 2px solid rgba(141,172,200,0.22); background: transparent;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; color: var(--muted);
+      transition: all 0.35s;
+    }
+    .progress-step.active .progress-step-circle { border-color: var(--aqua); background: rgba(0,201,224,0.1); color: var(--aqua); }
+    .progress-step.done  .progress-step-circle  { border-color: var(--aqua); background: var(--aqua); color: var(--navy); }
+    .progress-step-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em; color: var(--muted); transition: color 0.3s; white-space: nowrap; }
+    .progress-step.active .progress-step-label,
+    .progress-step.done  .progress-step-label  { color: var(--aqua); }
+    .progress-line { flex: 1; height: 2px; background: rgba(141,172,200,0.13); margin: 0 10px; margin-bottom: 22px; position: relative; overflow: hidden; }
+    .progress-line-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--aqua); width: 0%; transition: width 0.4s ease; }
+
+    /* ── FORM LAYOUT ── */
+    .form-outer { max-width: 680px; margin: 0 auto; padding: 48px clamp(16px,4vw,32px) 100px; }
+    .form-step { display: none; }
+    .form-step.active { display: block; animation: fadeUp 0.3s ease; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .step-header-bar {
+      background: var(--navy-mid);
+      border: 1px solid rgba(0,201,224,0.15);
+      border-radius: 14px 14px 0 0;
+      padding: 18px 26px;
+      font-size: 0.95rem; font-weight: 700; color: var(--white);
+      letter-spacing: 0.04em; text-align: center;
+    }
+    .step-card {
+      background: rgba(14,34,69,0.7);
+      border: 1px solid rgba(0,201,224,0.1);
+      border-top: none; border-radius: 0 0 14px 14px;
+      padding: 28px 26px;
+    }
+
+    /* ── SERVICE CARDS (Step 1) ── */
+    .services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .service-toggle {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 16px; background: rgba(11,30,61,0.8);
+      border: 1.5px solid rgba(141,172,200,0.18); border-radius: 10px;
+      cursor: pointer; transition: all 0.22s; user-select: none;
+    }
+    .service-toggle:hover  { border-color: rgba(0,201,224,0.45); background: rgba(0,201,224,0.05); }
+    .service-toggle.selected { border-color: var(--aqua); background: rgba(0,201,224,0.09); }
+    .svc-check {
+      width: 20px; height: 20px; border: 2px solid rgba(141,172,200,0.35); border-radius: 5px;
+      flex-shrink: 0; margin-top: 2px;
+      display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+    }
+    .service-toggle.selected .svc-check { background: var(--aqua); border-color: var(--aqua); }
+    .svc-check svg { width: 11px; height: 11px; stroke: var(--navy); fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; opacity: 0; transform: scale(0.4); transition: all 0.2s; }
+    .service-toggle.selected .svc-check svg { opacity: 1; transform: scale(1); }
+    .svc-info { display: flex; flex-direction: column; gap: 3px; }
+    .svc-label { font-size: 0.855rem; font-weight: 600; color: var(--muted); transition: color 0.2s; line-height: 1.3; }
+    .service-toggle.selected .svc-label { color: var(--white); }
+    .svc-rate  { font-size: 0.72rem; color: rgba(0,201,224,0.65); font-weight: 500; }
+
+    .pricing-note {
+      font-size: 0.76rem; color: rgba(141,172,200,0.55);
+      text-align: center; margin-top: 4px;
+    }
+
+    /* ── FORM FIELDS ── */
+    .field-group { margin-bottom: 20px; }
+    .field-label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--off-white); margin-bottom: 8px; letter-spacing: 0.03em; }
+    .req { color: var(--aqua); }
+    .field-hint { font-size: 0.73rem; color: var(--muted); margin-top: 5px; }
+
+    .input-unit-wrap { position: relative; display: flex; align-items: center; }
+    .field-input, .field-select, .field-textarea {
+      width: 100%; padding: 13px 16px;
+      background: rgba(11,30,61,0.85);
+      border: 1.5px solid rgba(141,172,200,0.2);
+      border-radius: 9px; color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.875rem; transition: border-color 0.25s;
+      outline: none; appearance: none;
+    }
+    .input-unit-wrap .field-input { padding-right: 76px; }
+    .unit-badge { position: absolute; right: 14px; font-size: 0.74rem; font-weight: 700; color: var(--muted); pointer-events: none; white-space: nowrap; }
+    .field-input::placeholder, .field-textarea::placeholder { color: rgba(141,172,200,0.4); }
+    .field-input:focus, .field-select:focus, .field-textarea:focus { border-color: var(--aqua); }
+    .field-input.err, .field-select.err { border-color: #f06060; }
+    .field-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238dacc8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px; cursor: pointer;
+    }
+    .field-select option { background: #122850; color: var(--white); }
+    .field-textarea { min-height: 88px; resize: vertical; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .field-error { font-size: 0.76rem; color: #f06060; margin-top: 5px; display: none; }
+
+    /* ── RADIO CHIPS ── */
+    .radio-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .radio-chip {
+      padding: 9px 16px; background: rgba(11,30,61,0.8);
+      border: 1.5px solid rgba(141,172,200,0.2); border-radius: 50px;
+      cursor: pointer; font-size: 0.78rem; font-weight: 600; color: var(--muted);
+      transition: all 0.2s; user-select: none; white-space: nowrap;
+    }
+    .radio-chip:hover { border-color: rgba(0,201,224,0.4); color: var(--off-white); }
+    .radio-chip.selected { border-color: var(--aqua); background: rgba(0,201,224,0.1); color: var(--white); }
+
+    /* ── CONDITIONAL BLOCKS ── */
+    .cond-block { display: none; }
+    .cond-block.show { display: block; }
+    .cond-divider { border: none; border-top: 1px solid rgba(0,201,224,0.1); margin: 24px 0; }
+    .cond-title { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--aqua); margin-bottom: 16px; }
+
+    /* ── LIVE QUOTE PANEL ── */
+    .quote-panel {
+      margin-top: 28px;
+      border-radius: 12px; overflow: hidden;
+      border: 1px solid rgba(0,201,224,0.2);
+    }
+    .quote-panel-header {
+      background: rgba(0,201,224,0.08);
+      padding: 12px 20px;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--aqua);
+    }
+    .quote-panel-body { background: rgba(11,30,61,0.6); padding: 0; }
+    .quote-line {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 11px 20px; gap: 16px;
+      border-bottom: 1px solid rgba(0,201,224,0.07);
+      font-size: 0.82rem;
+    }
+    .quote-line:last-child { border-bottom: none; }
+    .quote-line-label { color: var(--muted); }
+    .quote-line-price { color: var(--off-white); font-weight: 600; }
+    .quote-line.total {
+      background: rgba(244,164,10,0.07);
+      border-top: 1px solid rgba(244,164,10,0.2) !important;
+    }
+    .quote-line.total .quote-line-label { color: var(--off-white); font-weight: 700; font-size: 0.88rem; }
+    .quote-line.total .quote-line-price  { color: var(--gold); font-size: 1.15rem; font-weight: 700; }
+
+    /* manual quote state */
+    .quote-panel.manual { border-color: rgba(244,164,10,0.35); }
+    .quote-panel.manual .quote-panel-header { background: rgba(244,164,10,0.08); color: var(--gold); }
+    .quote-manual-msg {
+      padding: 18px 20px;
+      font-size: 0.84rem; color: rgba(244,164,10,0.85); line-height: 1.6;
+    }
+    .quote-manual-msg strong { color: var(--gold); }
+
+    /* empty / incomplete state */
+    .quote-empty { padding: 18px 20px; font-size: 0.82rem; color: rgba(141,172,200,0.45); text-align: center; }
+
+    /* ── ERROR BANNER ── */
+    .step-error {
+      background: rgba(240,96,96,0.09); border: 1px solid rgba(240,96,96,0.28);
+      border-radius: 8px; padding: 12px 16px; font-size: 0.8rem; color: #f08080;
+      margin-bottom: 18px; display: none;
+    }
+
+    /* ── BUTTONS ── */
+    .step-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 32px; background: var(--gold); color: var(--navy);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.82rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+      border: none; border-radius: 50px; cursor: pointer; transition: all 0.3s;
+    }
+    .btn-primary:hover { background: #ffc94d; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(244,164,10,0.28); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 26px; background: transparent; color: var(--muted);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.82rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+      border: 1.5px solid rgba(141,172,200,0.22); border-radius: 50px; cursor: pointer; transition: all 0.3s;
+    }
+    .btn-secondary:hover { border-color: var(--muted); color: var(--white); }
+
+    /* ── REVIEW ── */
+    .review-block { margin-bottom: 22px; }
+    .review-block-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--aqua); margin-bottom: 10px; }
+    .review-rows { background: rgba(11,30,61,0.6); border: 1px solid rgba(0,201,224,0.12); border-radius: 10px; overflow: hidden; }
+    .review-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 11px 16px; gap: 16px; border-bottom: 1px solid rgba(0,201,224,0.07); }
+    .review-row:last-child { border-bottom: none; }
+    .review-key { font-size: 0.8rem; font-weight: 600; color: var(--muted); flex-shrink: 0; }
+    .review-val { font-size: 0.82rem; color: var(--off-white); text-align: right; }
+    .review-row.total-row { background: rgba(244,164,10,0.07); border-top: 1px solid rgba(244,164,10,0.2) !important; }
+    .review-row.total-row .review-key { color: var(--off-white); font-size: 0.9rem; }
+    .review-row.total-row .review-val { color: var(--gold); font-size: 1.05rem; font-weight: 700; }
+    .review-manual-banner {
+      background: rgba(244,164,10,0.08); border: 1px solid rgba(244,164,10,0.3);
+      border-radius: 10px; padding: 16px 20px; margin-bottom: 16px;
+      font-size: 0.85rem; color: rgba(244,164,10,0.9); line-height: 1.6;
+    }
+    .review-disclaimer { font-size: 0.76rem; color: rgba(141,172,200,0.55); text-align: center; margin-top: 14px; line-height: 1.6; }
+
+    /* ── SUCCESS ── */
+    .success-card { text-align: center; padding: 60px 32px; background: rgba(14,34,69,0.7); border: 1px solid rgba(0,201,224,0.15); border-radius: 16px; }
+    .success-icon { width: 72px; height: 72px; border-radius: 50%; background: rgba(0,201,224,0.1); border: 2px solid rgba(0,201,224,0.3); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; }
+    .success-icon svg { width: 34px; height: 34px; stroke: var(--aqua); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .success-card h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--white); margin-bottom: 12px; }
+    .success-card p { font-size: 0.9rem; color: var(--muted); max-width: 420px; margin: 0 auto 28px; line-height: 1.75; }
+    .success-detail { background: rgba(0,201,224,0.06); border: 1px solid rgba(0,201,224,0.15); border-radius: 10px; padding: 18px 24px; max-width: 380px; margin: 0 auto 28px; font-size: 0.82rem; color: var(--muted); text-align: left; line-height: 1.7; }
+    .success-detail strong { color: var(--off-white); }
+
+    /* ── FOOTER ── */
+    footer { background: #060f1c; border-top: 1px solid rgba(0,201,224,0.1); padding: 28px clamp(20px,5vw,60px); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    footer p { font-size: 0.8rem; color: rgba(141,172,200,0.45); }
+    footer .footer-links { display: flex; gap: 20px; }
+    footer .footer-links a { font-size: 0.8rem; color: rgba(141,172,200,0.45); }
+    footer .footer-links a:hover { color: var(--aqua); }
+
+    @media (max-width: 540px) {
+      .services-grid { grid-template-columns: 1fr; }
+      .field-row { grid-template-columns: 1fr; }
+      .step-actions { flex-direction: column-reverse; }
+      .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="aquanovalogo.png" alt="AquaNova Pressure Washing" />
+    </a>
+    <a href="index.html" class="nav-back">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Home
+    </a>
+  </nav>
+
+  <div class="page-hero">
+    <span class="label">Instant Estimate</span>
+    <h1>Get a Free Quote</h1>
+    <p>Enter your measurements and see your price instantly — no waiting, no back-and-forth.</p>
+  </div>
+
+  <div class="progress-wrapper">
+    <div class="progress-steps">
+      <div class="progress-step active" id="ps-1">
+        <div class="progress-step-circle">1</div>
+        <span class="progress-step-label">Services</span>
+      </div>
+      <div class="progress-line"><div class="progress-line-fill" id="pl-1"></div></div>
+      <div class="progress-step" id="ps-2">
+        <div class="progress-step-circle">2</div>
+        <span class="progress-step-label">Measurements</span>
+      </div>
+      <div class="progress-line"><div class="progress-line-fill" id="pl-2"></div></div>
+      <div class="progress-step" id="ps-3">
+        <div class="progress-step-circle">3</div>
+        <span class="progress-step-label">Contact</span>
+      </div>
+      <div class="progress-line"><div class="progress-line-fill" id="pl-3"></div></div>
+      <div class="progress-step" id="ps-4">
+        <div class="progress-step-circle">4</div>
+        <span class="progress-step-label">Review</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-outer">
+
+    <!-- ════ STEP 1 — Services ════ -->
+    <div class="form-step active" id="step-1">
+      <div class="step-header-bar">Select Services</div>
+      <div class="step-card">
+        <div class="step-error" id="err-s1">Please select at least one service to continue.</div>
+        <div class="services-grid">
+
+          <div class="service-toggle" data-svc="houseWash" onclick="toggleSvc(this)">
+            <div class="svc-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="svc-info">
+              <span class="svc-label">House &amp; Siding Wash</span>
+              <span class="svc-rate">From $250</span>
+            </div>
+          </div>
+
+          <div class="service-toggle" data-svc="driveway" onclick="toggleSvc(this)">
+            <div class="svc-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="svc-info">
+              <span class="svc-label">Driveway Cleaning</span>
+              <span class="svc-rate">$0.20 / sq ft</span>
+            </div>
+          </div>
+
+          <div class="service-toggle" data-svc="deck" onclick="toggleSvc(this)">
+            <div class="svc-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="svc-info">
+              <span class="svc-label">Deck Cleaning</span>
+              <span class="svc-rate">$0.20 / sq ft</span>
+            </div>
+          </div>
+
+          <div class="service-toggle" data-svc="fence" onclick="toggleSvc(this)">
+            <div class="svc-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="svc-info">
+              <span class="svc-label">Fence Cleaning</span>
+              <span class="svc-rate">$1.50 / linear ft</span>
+            </div>
+          </div>
+
+        </div>
+        <p class="pricing-note">$200 minimum on all jobs &nbsp;·&nbsp; Houses over 4,000 sq ft or 4+ stories receive a custom quote</p>
+        <div class="step-actions">
+          <button class="btn-primary" onclick="s1Next()">
+            Continue
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ STEP 2 — Measurements ════ -->
+    <div class="form-step" id="step-2">
+      <div class="step-header-bar">Property Measurements</div>
+      <div class="step-card">
+        <div class="step-error" id="err-s2">Please fill in all required measurements above.</div>
+
+        <div class="field-group">
+          <label class="field-label" for="prop-addr">Property Address <span class="req">*</span></label>
+          <input type="text" id="prop-addr" class="field-input" placeholder="123 Main St, Mequon, WI 53092" />
+          <div class="field-error" id="err-addr">Please enter the service address.</div>
+        </div>
+
+        <!-- House Wash -->
+        <div class="cond-block" id="cond-houseWash">
+          <hr class="cond-divider" />
+          <div class="cond-title">House &amp; Siding Wash</div>
+          <div class="field-group">
+            <label class="field-label" for="meas-house">Home Square Footage <span class="req">*</span></label>
+            <div class="input-unit-wrap">
+              <input type="number" id="meas-house" class="field-input" placeholder="e.g. 2200" min="1" oninput="recalculate()" />
+              <span class="unit-badge">sq ft</span>
+            </div>
+            <div class="field-error" id="err-house">Please enter your home's square footage.</div>
+            <div class="field-hint">Use your home's total square footage (living area). Estimate is fine — we confirm on-site.</div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Number of Stories <span class="req">*</span></label>
+            <div class="radio-chips" id="stories-chips">
+              <div class="radio-chip" data-stories="1" onclick="pickStories(this)">1 Story</div>
+              <div class="radio-chip" data-stories="2" onclick="pickStories(this)">2 Stories</div>
+              <div class="radio-chip" data-stories="3" onclick="pickStories(this)">3 Stories</div>
+              <div class="radio-chip" data-stories="4" onclick="pickStories(this)">4+ Stories</div>
+            </div>
+            <div class="field-error" id="err-stories">Please select the number of stories.</div>
+          </div>
+          <div class="field-group" style="margin-bottom:0">
+            <label class="field-label" for="siding-mat">Siding Material</label>
+            <select id="siding-mat" class="field-select">
+              <option value="">Please select…</option>
+              <option>Vinyl</option>
+              <option>Brick</option>
+              <option>Stucco</option>
+              <option>Hardi Plank / Fiber Cement</option>
+              <option>Wood / Cedar Shake</option>
+              <option>Aluminum</option>
+              <option>Not Sure</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Driveway -->
+        <div class="cond-block" id="cond-driveway">
+          <hr class="cond-divider" />
+          <div class="cond-title">Driveway Cleaning</div>
+          <div class="field-group" style="margin-bottom:0">
+            <label class="field-label" for="meas-driveway">Driveway Area <span class="req">*</span></label>
+            <div class="input-unit-wrap">
+              <input type="number" id="meas-driveway" class="field-input" placeholder="e.g. 500" min="1" oninput="recalculate()" />
+              <span class="unit-badge">sq ft</span>
+            </div>
+            <div class="field-error" id="err-driveway">Please enter the driveway area.</div>
+            <div class="field-hint">A standard 2-car driveway is roughly 400–600 sq ft.</div>
+          </div>
+        </div>
+
+        <!-- Deck -->
+        <div class="cond-block" id="cond-deck">
+          <hr class="cond-divider" />
+          <div class="cond-title">Deck Cleaning</div>
+          <div class="field-group" style="margin-bottom:0">
+            <label class="field-label" for="meas-deck">Deck Area <span class="req">*</span></label>
+            <div class="input-unit-wrap">
+              <input type="number" id="meas-deck" class="field-input" placeholder="e.g. 300" min="1" oninput="recalculate()" />
+              <span class="unit-badge">sq ft</span>
+            </div>
+            <div class="field-error" id="err-deck">Please enter the deck area.</div>
+            <div class="field-hint">We clean bare wood decks only — not painted or sealed surfaces.</div>
+          </div>
+        </div>
+
+        <!-- Fence -->
+        <div class="cond-block" id="cond-fence">
+          <hr class="cond-divider" />
+          <div class="cond-title">Fence Cleaning</div>
+          <div class="field-group" style="margin-bottom:0">
+            <label class="field-label" for="meas-fence">Fence Length <span class="req">*</span></label>
+            <div class="input-unit-wrap">
+              <input type="number" id="meas-fence" class="field-input" placeholder="e.g. 150" min="1" oninput="recalculate()" />
+              <span class="unit-badge">linear ft</span>
+            </div>
+            <div class="field-error" id="err-fence">Please enter the fence length.</div>
+          </div>
+        </div>
+
+        <hr class="cond-divider" />
+        <div class="field-group" style="margin-bottom:0">
+          <label class="field-label" for="extra-notes">Additional Notes</label>
+          <textarea id="extra-notes" class="field-textarea" placeholder="Heavy staining, HOA requirements, hard-to-reach areas, or anything else we should know…"></textarea>
+        </div>
+
+        <!-- Live Quote Panel -->
+        <div class="quote-panel" id="quote-panel" style="display:none;">
+          <div class="quote-panel-header" id="quote-panel-header">Your Instant Quote</div>
+          <div class="quote-panel-body" id="quote-panel-body">
+            <div class="quote-empty">Enter your measurements above to see your price.</div>
+          </div>
+        </div>
+
+        <div class="step-actions">
+          <button class="btn-secondary" onclick="goStep(1)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+          <button class="btn-primary" onclick="s2Next()">
+            Continue
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ STEP 3 — Contact ════ -->
+    <div class="form-step" id="step-3">
+      <div class="step-header-bar">Contact Information</div>
+      <div class="step-card">
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label" for="c-first">First Name <span class="req">*</span></label>
+            <input type="text" id="c-first" class="field-input" placeholder="First Name" />
+            <div class="field-error" id="err-first">Required.</div>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="c-last">Last Name <span class="req">*</span></label>
+            <input type="text" id="c-last" class="field-input" placeholder="Last Name" />
+            <div class="field-error" id="err-last">Required.</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="c-phone">Phone Number <span class="req">*</span></label>
+          <input type="tel" id="c-phone" class="field-input" placeholder="(262) 000-0000" />
+          <div class="field-error" id="err-phone">Please enter a phone number.</div>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="c-email">Email Address <span class="req">*</span></label>
+          <input type="email" id="c-email" class="field-input" placeholder="you@example.com" />
+          <div class="field-error" id="err-email">Please enter a valid email.</div>
+        </div>
+        <div class="field-group" style="margin-bottom:0">
+          <label class="field-label" for="c-heard">How Did You Hear About Us?</label>
+          <select id="c-heard" class="field-select">
+            <option value="">Please select…</option>
+            <option>Google Search</option>
+            <option>Facebook / Instagram</option>
+            <option>Nextdoor</option>
+            <option>Friend or Neighbor Referral</option>
+            <option>Saw Our Truck / Sign</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="step-actions">
+          <button class="btn-secondary" onclick="goStep(2)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+          <button class="btn-primary" onclick="s3Next()">
+            Review My Quote
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ STEP 4 — Review ════ -->
+    <div class="form-step" id="step-4">
+      <div class="step-header-bar">Your Quote Summary</div>
+      <div class="step-card">
+        <div id="review-content"></div>
+        <p class="review-disclaimer">This is an automated estimate. Final pricing is confirmed after an on-site assessment and may vary based on condition, access, and staining.</p>
+        <div class="step-actions" style="margin-top:20px;">
+          <button class="btn-secondary" onclick="goStep(3)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+          <button class="btn-primary" id="submit-btn" onclick="submitQuote()">
+            Send My Quote
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ SUCCESS ════ -->
+    <div class="form-step" id="step-success">
+      <div class="success-card">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h2>Quote Sent!</h2>
+        <p>Your request has been sent to our team. We'll review it and follow up within 24 hours to confirm your appointment.</p>
+        <div class="success-detail" id="success-detail"></div>
+        <a href="index.html" class="btn-primary" style="text-decoration:none;margin:0 auto;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Back to Home
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>&copy; <span id="yr"></span> AquaNova Pressure Washing. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="tos.html">Terms of Service</a>
+      <a href="index.html">Home</a>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    /* ══ EMAIL CREDENTIALS — replace after EmailJS setup ══ */
+    const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';
+    const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';
+    const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+
+    /* ══ STATE ══ */
+    const S = {
+      services: new Set(),
+      stories: null,   // numeric: 1, 2, 3, or 4
+    };
+
+    /* ══════════════════════════════════════════════════════
+       PRICING FUNCTION (exact logic as specified)
+    ══════════════════════════════════════════════════════ */
+    function calculateQuote(inputs) {
+      let total = 0;
+      let manualQuoteRequired = false;
+      let manualQuoteReason = "";
+
+      // House wash
+      if (inputs.services.includes("houseWash")) {
+        const sqft = inputs.houseSqft;
+
+        if (sqft > 4000) {
+          manualQuoteRequired = true;
+          manualQuoteReason = "Houses over 4,000 sq ft require a custom quote.";
+        } else if (sqft < 2000) {
+          total += 250;
+        } else if (sqft >= 2000 && sqft <= 3000) {
+          total += 350;
+        } else if (sqft > 3000 && sqft <= 4000) {
+          total += 450;
+        }
+
+        // Stories surcharge
+        if (inputs.stories === 2) {
+          total += 75;
+        } else if (inputs.stories === 3) {
+          total += 200;
+        } else if (inputs.stories >= 4) {
+          manualQuoteRequired = true;
+          manualQuoteReason = "4+ story homes require a custom quote.";
+        }
+      }
+
+      // Driveway
+      if (inputs.services.includes("driveway")) {
+        total += inputs.drivewaySqft * 0.20;
+      }
+
+      // Deck
+      if (inputs.services.includes("deck")) {
+        total += inputs.deckSqft * 0.20;
+      }
+
+      // Fence
+      if (inputs.services.includes("fence")) {
+        total += inputs.fenceLinearFt * 1.50;
+      }
+
+      // Minimum job price
+      if (total < 200 && !manualQuoteRequired) {
+        total = 200;
+      }
+
+      // Round to nearest dollar
+      total = Math.round(total);
+
+      return { total, manualQuoteRequired, manualQuoteReason };
+    }
+
+    /* ══ Build inputs object from form ══ */
+    function buildInputs() {
+      return {
+        services:     [...S.services],
+        houseSqft:    parseFloat(document.getElementById('meas-house')?.value)    || 0,
+        stories:      S.stories || 1,
+        drivewaySqft: parseFloat(document.getElementById('meas-driveway')?.value) || 0,
+        deckSqft:     parseFloat(document.getElementById('meas-deck')?.value)     || 0,
+        fenceLinearFt:parseFloat(document.getElementById('meas-fence')?.value)    || 0,
+      };
+    }
+
+    /* ══ Service labels ══ */
+    const SVC_LABELS = {
+      houseWash: 'House & Siding Wash',
+      driveway:  'Driveway Cleaning',
+      deck:      'Deck Cleaning',
+      fence:     'Fence Cleaning',
+    };
+
+    /* ════════════════════════════════════════
+       STEP 1
+    ════════════════════════════════════════ */
+    function toggleSvc(el) {
+      el.classList.toggle('selected');
+      S.services[el.classList.contains('selected') ? 'add' : 'delete'](el.dataset.svc);
+      document.getElementById('err-s1').style.display = 'none';
+    }
+
+    function s1Next() {
+      if (!S.services.size) { document.getElementById('err-s1').style.display = 'block'; return; }
+      // Show conditional measurement blocks
+      ['houseWash', 'driveway', 'deck', 'fence'].forEach(k => {
+        const el = document.getElementById('cond-' + k);
+        if (el) el.classList.toggle('show', S.services.has(k));
+      });
+      goStep(2);
+      // Trigger recalculate so panel shows if inputs already filled
+      recalculate();
+    }
+
+    /* ════════════════════════════════════════
+       LIVE QUOTE (Step 2)
+    ════════════════════════════════════════ */
+    function pickStories(el) {
+      document.querySelectorAll('.radio-chip[data-stories]').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      S.stories = parseInt(el.dataset.stories, 10);
+      recalculate();
+    }
+
+    function recalculate() {
+      const panel = document.getElementById('quote-panel');
+      const header = document.getElementById('quote-panel-header');
+      const body   = document.getElementById('quote-panel-body');
+
+      const inputs = buildInputs();
+
+      // Check if any measurement has a value yet
+      const hasAnyMeas = (
+        (S.services.has('houseWash') && inputs.houseSqft > 0) ||
+        (S.services.has('driveway')  && inputs.drivewaySqft > 0) ||
+        (S.services.has('deck')      && inputs.deckSqft > 0) ||
+        (S.services.has('fence')     && inputs.fenceLinearFt > 0)
+      );
+
+      if (!hasAnyMeas) {
+        panel.style.display = 'none';
+        return;
+      }
+
+      panel.style.display = 'block';
+      const result = calculateQuote(inputs);
+
+      if (result.manualQuoteRequired) {
+        panel.className = 'quote-panel manual';
+        header.textContent = 'Custom Quote Required';
+        body.innerHTML = `<div class="quote-manual-msg"><strong>We'll provide a custom quote for this job.</strong><br>${result.manualQuoteReason} Submit the form and we'll reach out within 24 hours with a tailored price.</div>`;
+        return;
+      }
+
+      panel.className = 'quote-panel';
+      header.textContent = 'Your Instant Quote';
+
+      // Build line items
+      let lines = '';
+      if (S.services.has('houseWash') && inputs.houseSqft > 0) {
+        const base = inputs.houseSqft < 2000 ? 250 : inputs.houseSqft <= 3000 ? 350 : 450;
+        lines += qLine(SVC_LABELS.houseWash, '$' + base);
+        if (inputs.stories === 2) lines += qLine('2-Story Surcharge', '+$75');
+        if (inputs.stories === 3) lines += qLine('3-Story Surcharge', '+$200');
+      }
+      if (S.services.has('driveway') && inputs.drivewaySqft > 0)
+        lines += qLine(`${SVC_LABELS.driveway} (${inputs.drivewaySqft.toLocaleString()} sq ft)`, '$' + Math.round(inputs.drivewaySqft * 0.20));
+      if (S.services.has('deck') && inputs.deckSqft > 0)
+        lines += qLine(`${SVC_LABELS.deck} (${inputs.deckSqft.toLocaleString()} sq ft)`, '$' + Math.round(inputs.deckSqft * 0.20));
+      if (S.services.has('fence') && inputs.fenceLinearFt > 0)
+        lines += qLine(`${SVC_LABELS.fence} (${inputs.fenceLinearFt.toLocaleString()} lin ft)`, '$' + Math.round(inputs.fenceLinearFt * 1.50));
+
+      // Note if minimum applied
+      const rawTotal = computeRawTotal(inputs);
+      const minApplied = rawTotal < 200 && rawTotal > 0;
+
+      body.innerHTML = lines + `
+        <div class="quote-line total">
+          <span class="quote-line-label">${minApplied ? 'Estimated Total (minimum applied)' : 'Estimated Total'}</span>
+          <span class="quote-line-price">$${result.total}</span>
+        </div>`;
+    }
+
+    function qLine(label, price) {
+      return `<div class="quote-line"><span class="quote-line-label">${label}</span><span class="quote-line-price">${price}</span></div>`;
+    }
+
+    // Raw total before minimum (for minimum-applied note)
+    function computeRawTotal(inputs) {
+      let t = 0;
+      if (inputs.services.includes('driveway'))  t += inputs.drivewaySqft * 0.20;
+      if (inputs.services.includes('deck'))       t += inputs.deckSqft * 0.20;
+      if (inputs.services.includes('fence'))      t += inputs.fenceLinearFt * 1.50;
+      if (inputs.services.includes('houseWash') && inputs.houseSqft > 0 && inputs.houseSqft <= 4000 && inputs.stories < 4) {
+        t += inputs.houseSqft < 2000 ? 250 : inputs.houseSqft <= 3000 ? 350 : 450;
+        if (inputs.stories === 2) t += 75;
+        if (inputs.stories === 3) t += 200;
+      }
+      return t;
+    }
+
+    /* ════════════════════════════════════════
+       STEP 2 → 3
+    ════════════════════════════════════════ */
+    function s2Next() {
+      let valid = true;
+
+      // Address
+      const addr = document.getElementById('prop-addr');
+      if (!addr.value.trim()) {
+        addr.classList.add('err');
+        document.getElementById('err-addr').style.display = 'block';
+        valid = false;
+      } else {
+        addr.classList.remove('err');
+        document.getElementById('err-addr').style.display = 'none';
+      }
+
+      // Per-service measurement validation
+      if (S.services.has('houseWash')) {
+        const v = document.getElementById('meas-house');
+        if (!v.value || parseFloat(v.value) <= 0) {
+          v.classList.add('err');
+          document.getElementById('err-house').style.display = 'block';
+          valid = false;
+        } else { v.classList.remove('err'); document.getElementById('err-house').style.display = 'none'; }
+
+        if (!S.stories) {
+          document.getElementById('err-stories').style.display = 'block';
+          valid = false;
+        } else {
+          document.getElementById('err-stories').style.display = 'none';
+        }
+      }
+      if (S.services.has('driveway')) {
+        const v = document.getElementById('meas-driveway');
+        if (!v.value || parseFloat(v.value) <= 0) { v.classList.add('err'); document.getElementById('err-driveway').style.display = 'block'; valid = false; }
+        else { v.classList.remove('err'); document.getElementById('err-driveway').style.display = 'none'; }
+      }
+      if (S.services.has('deck')) {
+        const v = document.getElementById('meas-deck');
+        if (!v.value || parseFloat(v.value) <= 0) { v.classList.add('err'); document.getElementById('err-deck').style.display = 'block'; valid = false; }
+        else { v.classList.remove('err'); document.getElementById('err-deck').style.display = 'none'; }
+      }
+      if (S.services.has('fence')) {
+        const v = document.getElementById('meas-fence');
+        if (!v.value || parseFloat(v.value) <= 0) { v.classList.add('err'); document.getElementById('err-fence').style.display = 'block'; valid = false; }
+        else { v.classList.remove('err'); document.getElementById('err-fence').style.display = 'none'; }
+      }
+
+      if (!valid) { document.getElementById('err-s2').style.display = 'block'; return; }
+      document.getElementById('err-s2').style.display = 'none';
+      goStep(3);
+    }
+
+    /* ════════════════════════════════════════
+       STEP 3 → 4
+    ════════════════════════════════════════ */
+    function s3Next() {
+      const checks = [
+        { id: 'c-first', err: 'err-first', ok: v => v.length > 0 },
+        { id: 'c-last',  err: 'err-last',  ok: v => v.length > 0 },
+        { id: 'c-phone', err: 'err-phone', ok: v => v.length > 0 },
+        { id: 'c-email', err: 'err-email', ok: v => v.includes('@') },
+      ];
+      let valid = true;
+      checks.forEach(c => {
+        const el = document.getElementById(c.id);
+        const pass = c.ok(el.value.trim());
+        el.classList.toggle('err', !pass);
+        document.getElementById(c.err).style.display = pass ? 'none' : 'block';
+        if (!pass) valid = false;
+      });
+      if (!valid) return;
+      buildReview();
+      goStep(4);
+    }
+
+    /* ════════════════════════════════════════
+       BUILD REVIEW (Step 4)
+    ════════════════════════════════════════ */
+    function buildReview() {
+      const inputs = buildInputs();
+      const result = calculateQuote(inputs);
+      const addr   = document.getElementById('prop-addr').value.trim();
+      const sidMat = document.getElementById('siding-mat').value;
+      const notes  = document.getElementById('extra-notes').value.trim();
+
+      let html = '';
+
+      if (result.manualQuoteRequired) {
+        html += `<div class="review-manual-banner">
+          <strong>Custom Quote Required</strong><br>${result.manualQuoteReason}
+          We'll reach out within 24 hours with a tailored price.
+        </div>`;
+      }
+
+      html += `<div class="review-block"><div class="review-block-title">Quote Breakdown</div><div class="review-rows">`;
+
+      if (S.services.has('houseWash') && inputs.houseSqft > 0) {
+        if (!result.manualQuoteRequired || result.manualQuoteReason.includes('sq ft')) {
+          const base = inputs.houseSqft < 2000 ? 250 : inputs.houseSqft <= 3000 ? 350 : 450;
+          if (inputs.houseSqft <= 4000) {
+            html += rrow('House & Siding Wash', `${inputs.houseSqft.toLocaleString()} sq ft — $${base}`);
+            if (inputs.stories === 2) html += rrow('2-Story Surcharge', '+$75');
+            if (inputs.stories === 3) html += rrow('3-Story Surcharge', '+$200');
+          } else {
+            html += rrow('House & Siding Wash', 'Custom quote required');
+          }
+        } else {
+          html += rrow('House & Siding Wash', 'Custom quote required (4+ stories)');
+        }
+      }
+      if (S.services.has('driveway') && inputs.drivewaySqft > 0)
+        html += rrow(`Driveway (${inputs.drivewaySqft.toLocaleString()} sq ft)`, '$' + Math.round(inputs.drivewaySqft * 0.20));
+      if (S.services.has('deck') && inputs.deckSqft > 0)
+        html += rrow(`Deck (${inputs.deckSqft.toLocaleString()} sq ft)`, '$' + Math.round(inputs.deckSqft * 0.20));
+      if (S.services.has('fence') && inputs.fenceLinearFt > 0)
+        html += rrow(`Fence (${inputs.fenceLinearFt.toLocaleString()} lin ft)`, '$' + Math.round(inputs.fenceLinearFt * 1.50));
+
+      if (result.manualQuoteRequired) {
+        html += `<div class="review-row total-row"><span class="review-key">Estimated Total</span><span class="review-val" style="color:var(--gold)">Custom Quote</span></div>`;
+      } else {
+        const rawTotal = computeRawTotal(inputs);
+        const note = rawTotal < 200 ? ' (minimum applied)' : '';
+        html += `<div class="review-row total-row"><span class="review-key">Estimated Total</span><span class="review-val">$${result.total}${note}</span></div>`;
+      }
+
+      html += `</div></div>`;
+
+      html += `<div class="review-block"><div class="review-block-title">Property</div><div class="review-rows">
+        ${rrow('Address', addr)}
+        ${sidMat  ? rrow('Siding Material', sidMat) : ''}
+        ${S.stories && S.services.has('houseWash') ? rrow('Stories', S.stories + (S.stories >= 4 ? '+' : '') + ' stor' + (S.stories === 1 ? 'y' : 'ies')) : ''}
+        ${notes   ? rrow('Notes', notes) : ''}
+      </div></div>`;
+
+      html += `<div class="review-block"><div class="review-block-title">Contact</div><div class="review-rows">
+        ${rrow('Name',  document.getElementById('c-first').value.trim() + ' ' + document.getElementById('c-last').value.trim())}
+        ${rrow('Phone', document.getElementById('c-phone').value.trim())}
+        ${rrow('Email', document.getElementById('c-email').value.trim())}
+        ${document.getElementById('c-heard').value ? rrow('Source', document.getElementById('c-heard').value) : ''}
+      </div></div>`;
+
+      document.getElementById('review-content').innerHTML = html;
+    }
+
+    function rrow(k, v) {
+      return `<div class="review-row"><span class="review-key">${k}</span><span class="review-val">${v}</span></div>`;
+    }
+
+    /* ════════════════════════════════════════
+       SUBMIT
+    ════════════════════════════════════════ */
+    async function submitQuote() {
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.innerHTML = 'Sending…';
+
+      const inputs  = buildInputs();
+      const result  = calculateQuote(inputs);
+      const first   = document.getElementById('c-first').value.trim();
+      const last    = document.getElementById('c-last').value.trim();
+      const phone   = document.getElementById('c-phone').value.trim();
+      const email   = document.getElementById('c-email').value.trim();
+      const addr    = document.getElementById('prop-addr').value.trim();
+      const heard   = document.getElementById('c-heard').value || 'Not specified';
+      const notes   = document.getElementById('extra-notes').value.trim() || 'None';
+      const sidMat  = document.getElementById('siding-mat').value || 'N/A';
+      const storiesLabel = S.stories ? (S.stories >= 4 ? '4+ stories' : S.stories + '-story') : 'N/A';
+
+      // Build quote lines
+      const qLines = [];
+      if (S.services.has('houseWash') && inputs.houseSqft > 0) {
+        if (inputs.houseSqft > 4000) {
+          qLines.push('  House & Siding Wash: CUSTOM QUOTE (over 4,000 sq ft)');
+        } else {
+          const base = inputs.houseSqft < 2000 ? 250 : inputs.houseSqft <= 3000 ? 350 : 450;
+          qLines.push(`  House & Siding Wash: ${inputs.houseSqft.toLocaleString()} sq ft — $${base}`);
+          if (inputs.stories === 2) qLines.push('  2-Story Surcharge: +$75');
+          if (inputs.stories === 3) qLines.push('  3-Story Surcharge: +$200');
+          if (inputs.stories >= 4)  qLines.push('  Stories: CUSTOM QUOTE (4+ stories)');
+        }
+      }
+      if (S.services.has('driveway') && inputs.drivewaySqft > 0)
+        qLines.push(`  Driveway: ${inputs.drivewaySqft.toLocaleString()} sq ft × $0.20 = $${Math.round(inputs.drivewaySqft * 0.20)}`);
+      if (S.services.has('deck') && inputs.deckSqft > 0)
+        qLines.push(`  Deck: ${inputs.deckSqft.toLocaleString()} sq ft × $0.20 = $${Math.round(inputs.deckSqft * 0.20)}`);
+      if (S.services.has('fence') && inputs.fenceLinearFt > 0)
+        qLines.push(`  Fence: ${inputs.fenceLinearFt.toLocaleString()} lin ft × $1.50 = $${Math.round(inputs.fenceLinearFt * 1.50)}`);
+
+      const totalLine = result.manualQuoteRequired
+        ? `  TOTAL: CUSTOM QUOTE REQUIRED\n  Reason: ${result.manualQuoteReason}`
+        : `  TOTAL: $${result.total}${computeRawTotal(inputs) < 200 ? ' (minimum applied)' : ''}`;
+
+      const msgBody = `
+NEW QUOTE REQUEST — AquaNova Website
+${'═'.repeat(46)}
+
+CUSTOMER
+  Name:     ${first} ${last}
+  Phone:    ${phone}
+  Email:    ${email}
+  Property: ${addr}
+  Source:   ${heard}
+
+QUOTE BREAKDOWN
+${qLines.join('\n')}
+  ──────────────────────────────────────
+${totalLine}
+
+PROPERTY DETAILS
+  Siding Material: ${sidMat}
+  Stories:         ${storiesLabel}
+
+NOTES
+  ${notes}
+
+${'─'.repeat(46)}
+Auto-generated by the AquaNova website.
+Final pricing confirmed after on-site assessment.
+`.trim();
+
+      const emailParams = {
+        subject:   result.manualQuoteRequired
+          ? `Custom Quote Needed — ${first} ${last}`
+          : `New Quote Request — ${first} ${last} ($${result.total})`,
+        message:   msgBody,
+        to_name:   'AquaNova Team',
+        from_name: `${first} ${last}`,
+        reply_to:  email,
+      };
+
+      /* Try EmailJS */
+      if (EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
+        try {
+          emailjs.init(EMAILJS_PUBLIC_KEY);
+          await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, emailParams);
+          showSuccess(first, email, result);
+          return;
+        } catch (err) {
+          console.error('EmailJS error:', err);
+        }
+      }
+
+      /* Fallback: mailto */
+      const a = document.createElement('a');
+      a.href = `mailto:contact@aquanovapw.com?subject=${encodeURIComponent(emailParams.subject)}&body=${encodeURIComponent(msgBody)}`;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      showSuccess(first, email, result);
+    }
+
+    function showSuccess(firstName, email, result) {
+      document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step-success').classList.add('active');
+      markAllDone();
+      document.getElementById('success-detail').innerHTML = result.manualQuoteRequired
+        ? `<strong>Custom quote requested.</strong><br>One of our team members will review your job details and send you a tailored price within 24 hours.`
+        : `<strong>Your estimated total is $${result.total}.</strong><br>We'll confirm this price and schedule your appointment within 24 hours.`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ════════════════════════════════════════
+       NAVIGATION & PROGRESS
+    ════════════════════════════════════════ */
+    function goStep(n) {
+      document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step-' + n).classList.add('active');
+      updateProgress(n);
+      window.scrollTo({ top: document.querySelector('.progress-wrapper').offsetTop - 10, behavior: 'smooth' });
+    }
+
+    function updateProgress(n) {
+      for (let i = 1; i <= 4; i++) {
+        const ps = document.getElementById('ps-' + i);
+        ps.classList.remove('active', 'done');
+        const circle = ps.querySelector('.progress-step-circle');
+        if (i < n) { ps.classList.add('done'); circle.innerHTML = checkSVG(); }
+        else        { if (i === n) ps.classList.add('active'); circle.textContent = i; }
+      }
+      for (let i = 1; i <= 3; i++)
+        document.getElementById('pl-' + i).style.width = n > i ? '100%' : '0%';
+    }
+
+    function markAllDone() {
+      for (let i = 1; i <= 4; i++) {
+        const ps = document.getElementById('ps-' + i);
+        ps.classList.remove('active'); ps.classList.add('done');
+        ps.querySelector('.progress-step-circle').innerHTML = checkSVG();
+      }
+      for (let i = 1; i <= 3; i++) document.getElementById('pl-' + i).style.width = '100%';
+    }
+
+    function checkSVG() {
+      return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+    }
+  </script>
+
+</body>
+</html>
