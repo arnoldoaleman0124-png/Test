@@ -562,6 +562,12 @@
           <label class="field-label" for="c-phone">Phone Number <span class="req">*</span></label>
           <input type="tel" id="c-phone" class="field-input" placeholder="(262) 000-0000" />
           <div class="field-error" id="err-phone">Please enter a phone number.</div>
+          <label class="sms-consent-label" style="display:flex;align-items:flex-start;gap:10px;margin-top:10px;cursor:pointer;">
+            <input type="checkbox" id="sms-consent" style="margin-top:3px;flex-shrink:0;accent-color:#00C9E0;width:15px;height:15px;" />
+            <span style="font-size:0.75rem;color:rgba(141,172,200,0.7);line-height:1.6;">
+              I agree to receive text messages from AquaNova Pressure Washing about my quote, booking, and scheduling at the number provided. Msg frequency varies. Msg&amp;data rates may apply. Reply STOP to opt out, HELP for help. See our <a href="privacy.html" style="color:var(--aqua);text-decoration:underline;">Privacy Policy</a> and <a href="tos.html" style="color:var(--aqua);text-decoration:underline;">Terms</a>.
+            </span>
+          </label>
         </div>
         <div class="field-group">
           <label class="field-label" for="c-email">Email Address <span class="req">*</span></label>
@@ -978,6 +984,7 @@
       const heard   = document.getElementById('c-heard').value || 'Not specified';
       const notes   = document.getElementById('extra-notes').value.trim() || 'None';
       const sidMat  = document.getElementById('siding-mat').value || 'N/A';
+      const smsConsent = document.getElementById('sms-consent').checked ? 'Yes — consented via web form' : 'No';
       const storiesLabel = S.stories ? (S.stories >= 4 ? '4+ stories' : S.stories + '-story') : 'N/A';
 
       // Build quote lines
@@ -1017,11 +1024,12 @@ NEW QUOTE REQUEST — AquaNova Website
 ${'═'.repeat(46)}
 
 CUSTOMER
-  Name:     ${first} ${last}
-  Phone:    ${phone}
-  Email:    ${email}
-  Property: ${addr}
-  Source:   ${heard}
+  Name:        ${first} ${last}
+  Phone:       ${phone}
+  Email:       ${email}
+  Property:    ${addr}
+  Source:      ${heard}
+  SMS Consent: ${smsConsent}
 
 QUOTE BREAKDOWN
 ${qLines.join('\n')}
